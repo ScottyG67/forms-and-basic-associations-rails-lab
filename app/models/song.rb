@@ -5,45 +5,25 @@ class Song < ActiveRecord::Base
   has_many :notes
 
   def artist_name=(name)
-    byebug
     self.artist = Artist.find_or_create_by(name: name)
   end
 
   def artist_name
-    byebug
     self.artist ? self.artist.name : nil
   end
 
-  def song_note_1=(note_text)
-     new_note = Note.find_or_create_by(note_text: note_text)
-     new_note.song= self
-     byebug
+  def note_contents=(contents)
+    contents.each do |content|
+      if !content.empty?
+          note = Note.create(content: content, song_id: self.id)
+          self.notes << note
+      end
+    end
   end
 
-  def song_note_1
-    byebug
-    self.notes ? self.note.note_text : nil
+  def note_contents
+    self.notes.map { |note| note.content }
   end
-  
-  # def new_notes=(new_note_array)
-  #   new_note_array.each do |note_text|
-  #     #byebug
-  #     new_note = Note.create(content: note_text)
-  #     new_note.song = self
-  #   end
-  # end
-
-  # def new_notes
-  #   byebug
-
-
-  # end
-
-
-  # <p>Notes</p>
-  # <p><input name="song[new_notes][]"></p>
-  # <p><input name="song[new_notes][]"></p>
-  # <p><input name="song[new_notes][]"></p>
 
 
 end
