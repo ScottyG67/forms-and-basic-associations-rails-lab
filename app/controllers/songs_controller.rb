@@ -9,10 +9,11 @@ class SongsController < ApplicationController
 
   def new
     @song = Song.new
+    @artist_name = ""
   end
 
   def create
-    @song = Song.new(song_params)
+    @song = Song.new(song_params(:title,:genre_id, :artist_name,:song_note_1))
 
     if @song.save
       redirect_to @song
@@ -46,8 +47,13 @@ class SongsController < ApplicationController
 
   private
 
-  def song_params
-    params.require(:song).permit(:title)
+  def song_params(*args)
+    params.require(:song).permit(*args)
   end
+
+  def artist_object_finder
+    @artist = Artist.find_by(name: @artist_name)
+  end
+
 end
 
